@@ -177,12 +177,17 @@ class ilInteractiveVideoMediaObject implements ilInteractiveVideoSource
 			throw new ilException(sprintf("%s: No standard media item given", __METHOD__));
 		}
 
+		# BEGIN PATCH HSLU We just don't care and upload anyway. Let's see if ffmpeg can handle it
+		# (and by the way: We have restricted uploadable suffixes and format recognition is mostly done by ... suffix-mapping.)
+		
+		/*
 		$format = $mob->getMediaItem('Standard')->getFormat();
 		if(strpos($format, 'video') === false && strpos($format, 'audio') === false)
 		{
 			throw new ilException(sprintf("%s: No audio/video file given", __METHOD__));
 		}
-
+		*/
+		# END PATCH HSLU
 		$this->removeOldMobFiles($obj_id, $mob);
 
 		$this->saveDataToDb($obj_id);
