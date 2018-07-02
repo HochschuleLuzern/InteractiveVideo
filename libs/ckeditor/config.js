@@ -40,5 +40,5 @@ CKEDITOR.editorConfig = function( config ) {
 	config.enterMode = CKEDITOR.ENTER_BR;
 	
 	// Config available colors for colorbutton
-	config.colorButton_colors = 'a00057,cdf500,636904';
+	config.colorButton_colors = 'a00057,F79646,cdf500';
 };
