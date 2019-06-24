@@ -1,1 +1,4 @@
 VideoSources/plugin/*/
+/.settings/
+/.buildpath
+/.project
