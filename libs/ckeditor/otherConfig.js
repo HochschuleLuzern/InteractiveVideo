@@ -7,7 +7,7 @@ CKEDITOR.editorConfig = function( config ) {
 	
 	// %REMOVE_START%
 	// The configuration options below are needed when running CKEditor from source files.
-	config.plugins = 'dialogui,dialog,about,basicstyles,button,toolbar,enterkey,entities,floatingspace,wysiwygarea,fakeobjects,link,lineutils,clipboard,widgetselection,widget,mathjax,colorbutton';
+	config.plugins = 'dialogui,dialog,about,basicstyles,button,toolbar,enterkey,entities,floatingspace,resize,wysiwygarea,fakeobjects,link,lineutils,clipboard,widgetselection,widget,mathjax,colorbutton';
 	// %REMOVE_END%
 
 	// Define changes to default configuration here.
