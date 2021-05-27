@@ -24,7 +24,7 @@ class ilInteractiveVideoMediaObjectGUI implements ilInteractiveVideoSourceGUI
 		include_once('Modules/MediaCast/classes/class.ilMediaCastSettings.php');
 		$video_settings = ilMediaCastSettings::_getInstance();
 		$suffixes = $video_settings->getPurposeSuffixes();
-		$upload_field->setSuffixes(array_merge($suffixes['VideoPortable'],$suffixes['AudioPortable']));
+		$upload_field->setSuffixes($suffixes['VideoPortable']);
 		# END PATCH HSLU
 		$option->addSubItem($upload_field);
 		return $option;
