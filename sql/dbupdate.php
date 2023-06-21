@@ -417,8 +417,8 @@ if($ilDB->tableExists('rep_robj_xvid_question'))
 	
 	$res = $ilDB->queryF('SELECT comment_id FROM rep_robj_xvid_comments WHERE repeat_question = %s',
 		array('integer'), array(1));
-	
-	while($row = $ilDB->fetchAssoc($res))
+    $comment_ids = [];
+    while($row = $ilDB->fetchAssoc($res))
 	{
 		$comment_ids[] = $row['comment_id'];
 	}
