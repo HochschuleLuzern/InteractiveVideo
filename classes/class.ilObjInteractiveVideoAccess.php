@@ -1,7 +1,7 @@
 <?php
 /* Copyright (c) 1998-2015 ILIAS open source, Extended GPL, see docs/LICENSE */
 
-require_once 'Services/Repository/classes/class.ilObjectPluginAccess.php';
+require_once 'Services/Repository/PluginSlot/class.ilObjectPluginAccess.php';
 if(version_compare(ILIAS_VERSION_NUMERIC, '5.4.0', '>=')) {
 	require_once 'Services/Conditions/interfaces/interface.ilConditionHandling.php';
 	require_once('./Services/Conditions/classes/class.ilConditionHandler.php');
@@ -25,7 +25,7 @@ class ilObjInteractiveVideoAccess extends ilObjectPluginAccess implements ilCond
 	 * @param string $a_user_id
 	 * @return bool
 	 */
-	public function _checkAccess($a_cmd, $a_permission, $a_ref_id, $a_obj_id, $a_user_id = '')
+	public function _checkAccess($a_cmd, $a_permission, $a_ref_id, $a_obj_id, $a_user_id = ''): bool
 	{
 		/**
 		 * @var $ilUser   ilObjUser
@@ -76,7 +76,7 @@ class ilObjInteractiveVideoAccess extends ilObjectPluginAccess implements ilCond
 	/**
 	 * @inheritdoc
 	 */
-	public static function getConditionOperators()
+	public static function getConditionOperators(): array
 	{
 		return array(
 			ilConditionHandler::OPERATOR_LP
@@ -86,7 +86,7 @@ class ilObjInteractiveVideoAccess extends ilObjectPluginAccess implements ilCond
 	/**
 	 * @inheritdoc
 	 */
-	public static function checkCondition($a_trigger_obj_id, $a_operator, $a_value, $a_usr_id)
+	public static function checkCondition($a_trigger_obj_id, $a_operator, $a_value, $a_usr_id): bool
 	{
 		switch($a_operator)
 		{
@@ -105,7 +105,7 @@ class ilObjInteractiveVideoAccess extends ilObjectPluginAccess implements ilCond
 	 *
 	 * @return bool
 	 */
-	public function canBeDelivered(ilWACPath $ilWACPath) {
+	public function canBeDelivered(ilWACPath $ilWACPath): bool {
 		global $ilAccess;
 		preg_match("/\\/xvid_([\\d]*)\\//uism", $ilWACPath->getPath(), $results);
 

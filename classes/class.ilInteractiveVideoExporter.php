@@ -36,7 +36,7 @@ class ilInteractiveVideoExporter extends ilXmlExporter
 	 */
 	protected $filename;
 
-	public function getXmlRepresentation($a_entity, $a_schema_version, $a_id)
+	public function getXmlRepresentation($a_entity, $a_schema_version, $a_id): string
 	{
 		ilInteractiveVideoPlugin::getInstance()->includeClass('class.ilObjInteractiveVideo.php');
 
@@ -63,12 +63,12 @@ class ilInteractiveVideoExporter extends ilXmlExporter
 		$this->xml_writer->appendXML($md2xml->getXML());
 	}
 
-	public function init()
+	public function init(): void
 	{
 
 	}
 
-	public function getValidSchemaVersions($a_entity)
+	public function getValidSchemaVersions($a_entity): array
 	{
 		return array(
 			'5.2.0' => array(
@@ -188,7 +188,7 @@ class ilInteractiveVideoExporter extends ilXmlExporter
 						if(file_exists($path))
 						{
 							$export_path = $this->export_dir . '/' . $qid . '/';
-							ilUtil::makeDirParents($export_path);
+                            ilFileUtils::makeDirParents($export_path);
 							copy($path, $export_path . basename($path));
 						}
 						$this->xml_writer->xmlElement('QuestionImage', array('qid' => $qid, 'file' => '/Plugins/xvid/set_1/expDir_1/' . $qid . '/' . basename($path)));

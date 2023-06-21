@@ -10,7 +10,7 @@ class ilInteractiveVideoDbUpdater extends ilPluginDBUpdate
     /**
      * @var $db ilDBInterface
      */
-	protected $db;
+	protected ilDBInterface $db;
 
 	/**
 	 * @var array
@@ -42,6 +42,8 @@ class ilInteractiveVideoDbUpdater extends ilPluginDBUpdate
 	{
 		global $ilDB;
 		$this->db = $ilDB;
+        $class_map = require ILIAS_ABSOLUTE_PATH . '/libs/composer/vendor/composer/autoload_classmap.php';
+        $this->ctrl_structure_iterator = new ilCtrlArrayIterator($class_map);
 		$this->collectUpdateFiles();
 		$this->iterateThroughUpdateFiles();
 	}
@@ -88,7 +90,7 @@ class ilInteractiveVideoDbUpdater extends ilPluginDBUpdate
 	/**
 	 * @return int
 	 */
-	public function getCurrentVersion()
+	public function getCurrentVersion(): int
 	{
 		$res = $this->db->queryF(
 			'SELECT db_update FROM rep_robj_xvid_sources WHERE plugin_id = %s',
@@ -96,14 +98,14 @@ class ilInteractiveVideoDbUpdater extends ilPluginDBUpdate
 			array($this->plugin_id)
 		);
 		$row = $this->db->fetchAssoc($res);
-		return (int) $row['db_update'];
+		return isset($row['db_update']) ?  (int) $row['db_update'] : 0;
 	}
 
 	/**
 	 * @param $a_version
 	 * @return bool
 	 */
-	function setCurrentVersion($a_version)
+	function setCurrentVersion($a_version): void
 	{
 		$this->db->update('rep_robj_xvid_sources',
 			array(
@@ -113,7 +115,6 @@ class ilInteractiveVideoDbUpdater extends ilPluginDBUpdate
 				'plugin_id' => array('text', $this->plugin_id)
 			)
 		);
-		return true;
 	}
 	/**
 	 * @return bool
@@ -127,7 +128,7 @@ class ilInteractiveVideoDbUpdater extends ilPluginDBUpdate
 	 * @param $a_version
 	 * @return string
 	 */
-	function getFileForStep($a_version)
+	function getFileForStep($a_version): string
 	{
 		return $this->LAST_UPDATE_FILE;
 	}
@@ -165,18 +166,18 @@ class ilInteractiveVideoDbUpdater extends ilPluginDBUpdate
 		}
 		if($overall_success)
 		{
-			ilUtil::sendSuccess(ilInteractiveVideoPlugin::getInstance()->txt('db_update_worked'));
+            ilInteractiveVideoPlugin::sendSuccess(ilInteractiveVideoPlugin::getInstance()->txt('db_update_worked'));
 		}
 		else
 		{
-			ilUtil::sendFailure(sprintf(ilInteractiveVideoPlugin::getInstance()->txt('db_update_failed'), $error));
+            ilInteractiveVideoPlugin::sendFailure(sprintf(ilInteractiveVideoPlugin::getInstance()->txt('db_update_failed'), $error));
 		}
 	}
 
 	/**
 	 * @return bool
 	 */
-	function loadXMLInfo()
+	function loadXMLInfo(): bool
 	{
 		return true;
 	}

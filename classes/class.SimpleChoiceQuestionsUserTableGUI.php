@@ -14,7 +14,7 @@ class SimpleChoiceQuestionsUserTableGUI extends ilTable2GUI
 	/**
 	 * @var ilCtrl
 	 */
-	protected $ctrl;
+	protected ilCtrl $ctrl;
 
 	/**
 	 * @param ilObjectGUI $a_parent_obj
@@ -29,19 +29,19 @@ class SimpleChoiceQuestionsUserTableGUI extends ilTable2GUI
 	
 		$this->ctrl = $ilCtrl;
 	
-		$this->setId('xvid_answers_' . $a_parent_obj->object->getId());
+		$this->setId('xvid_answers_' . $a_parent_obj->getObject()->getId());
 		parent::__construct($a_parent_obj, $a_parent_cmd);
 	
 		$this->setFormAction($this->ctrl->getFormAction($a_parent_obj, $a_parent_cmd));
 	
-		$this->setTitle($a_parent_obj->plugin->txt('user_results'));
-		$this->setRowTemplate('tpl.row_questions_user.html', $a_parent_obj->plugin->getDirectory());
+		$this->setTitle($a_parent_obj->getPlugin()->txt('user_results'));
+		$this->setRowTemplate('tpl.row_questions_user.html', $a_parent_obj->getPlugin()->getDirectory());
 		$this->addColumn('', 'question_id',  '1px', true);
 	
 		$this->addColumn($this->lng->txt('question'), 'title');
 		#$this->addColumn($a_parent_obj->plugin->txt('answered'), 'answered');
-		$this->addColumn($a_parent_obj->plugin->txt('neutral_question'), 'neutral_question');
-		$this->addColumn($a_parent_obj->plugin->txt('correct_answered'), 'correct_answered');
+		$this->addColumn($a_parent_obj->getPlugin()->txt('neutral_question'), 'neutral_question');
+		$this->addColumn($a_parent_obj->getPlugin()->txt('correct_answered'), 'correct_answered');
 		
 		$this->setShowRowsSelector(false);
 		
@@ -50,7 +50,7 @@ class SimpleChoiceQuestionsUserTableGUI extends ilTable2GUI
 	/**
 	 * @param array $a_set
 	 */
-	protected function fillRow($a_set)
+	protected function fillRow($a_set): void
 	{
 		$current_selection_list = new ilAdvancedSelectionListGUI();
 		$current_selection_list->setListTitle($this->lng->txt('actions'));

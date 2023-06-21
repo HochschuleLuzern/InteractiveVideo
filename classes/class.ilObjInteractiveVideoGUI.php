@@ -1,6 +1,6 @@
 <?php
 /* Copyright (c) 1998-2015 ILIAS open source, Extended GPL, see docs/LICENSE */
-require_once 'Services/Repository/classes/class.ilObjectPluginGUI.php';
+require_once 'Services/Repository/PluginSlot/class.ilObjectPluginGUI.php';
 require_once 'Services/Dashboard/interfaces/interface.ilDesktopItemHandling.php';
 require_once 'Services/Form/classes/class.ilPropertyFormGUI.php';
 require_once 'Services/UIComponent/Button/classes/class.ilLinkButton.php';
@@ -30,18 +30,25 @@ ilInteractiveVideoPlugin::getInstance()->includeClass('class.ilInteractiveVideoF
 class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopItemHandling
 {
 	/** @var ilCtrl */
-	protected $ctrl;
+	protected ilCtrl $ctrl;
 
 	/** @var ilObjInteractiveVideo $object */
-	public $object;
+	//public ?ilObject $object;
 	
 	/** @var $objComment ilObjComment */
 	public $objComment;
 
 	/** @var ilPlugin */
-	public $plugin;
+	//public ?ilPlugin $plugin;
 
-	/**
+    public function __construct($a_ref_id = 0, $a_id_type = self::REPOSITORY_NODE_ID, $a_parent_node_id = 0)
+    {
+        global $DIC;
+        parent::__construct($a_ref_id, $a_id_type, $a_parent_node_id);
+        $this->request = $DIC->http()->request();
+    }
+
+    /**
 	 * @param ilInteractiveVideoPlugin $plugin
 	 * @param ilPropertyFormGUI $form
 	 */
@@ -78,7 +85,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	/**
 	 * Functions that must be overwritten
 	 */
-	public function getType()
+	public function getType(): string
 	{
 		return 'xvid';
 	}
@@ -86,7 +93,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	/**
 	 * Cmd that will be redirected to after creation of a new object.
 	 */
-	public function getAfterCreationCmd()
+	public function getAfterCreationCmd(): string
 	{
 		return 'editProperties';
 	}
@@ -94,7 +101,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	/**
 	 * @return string
 	 */
-	public function getStandardCmd()
+	public function getStandardCmd(): string
 	{
 		return 'showContent';
 	}
@@ -103,7 +110,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	 * @param string $cmd
 	 * @throws ilException
 	 */
-	public function performCommand($cmd)
+	public function performCommand($cmd): void
 	{
 		/**
 		 * @var $ilTabs ilTabsGUI
@@ -443,7 +450,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 			$answers = array();
 			if(is_array($_POST) && array_key_exists('answer', $_POST) && is_array($_POST['answer']) && sizeof($_POST['answer']) > 0)
 			{
-				$post_answers = ilUtil::stripSlashesRecursive($_POST['answer']);
+				$post_answers = ilArrayUtil::stripSlashesRecursive($_POST['answer']);
 				foreach($post_answers as $key => $value)
 				{
 					$correct = 0;
@@ -598,7 +605,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	 * @param ilPropertyFormGUI $a_form
 	 * @return bool
 	 */
-	protected function validateCustom(ilPropertyFormGUI $a_form)
+	protected function validateCustom(ilPropertyFormGUI $a_form): bool
 	{
 		return parent::validateCustom($a_form);
 	}
@@ -606,7 +613,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	/**
 	 * @param ilPropertyFormGUI $a_form
 	 */
-	protected function updateCustom(ilPropertyFormGUI $a_form)
+	protected function updateCustom(ilPropertyFormGUI $a_form): void
 	{
 		$factory = new ilInteractiveVideoSourceFactoryGUI($this->object);
 		$factory->checkForm($a_form);
@@ -666,7 +673,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	 * @param string $type
 	 * @return array
 	 */
-	protected function initCreationForms($type)
+	protected function initCreationForms($type): array
 	{
 		if(ilInteractiveVideoPlugin::getInstance()->isCoreMin52())
 		{
@@ -688,7 +695,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	 * @param string $type
 	 * @return ilPropertyFormGUI
 	 */
-	public function initCreateForm($type)
+	public function initCreateForm($type): \ilPropertyFormGUI
 	{
 		$form = parent::initCreateForm($type);
 
@@ -704,7 +711,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
      * @param ilPropertyFormGUI $a_form
      * @throws ilTemplateException
      */
-	protected function initEditCustomForm(ilPropertyFormGUI $a_form)
+	protected function initEditCustomForm(ilPropertyFormGUI $a_form): void
 	{
 		/**
 		 * @var $ilTabs ilTabsGUI
@@ -819,7 +826,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	/**
 	 * @param array $a_values
 	 */
-	protected function getEditFormCustomValues(array &$a_values)
+	protected function getEditFormCustomValues(array &$a_values): void
 	{
 		$factory = new ilInteractiveVideoSourceFactory();
 		$sources = $factory->getVideoSources();
@@ -856,7 +863,10 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	public function editProperties()
 	{
 	    global $DIC;
-        $customJS = ilUtil::stripSlashes($_GET['xvid_custom_js']);
+
+        //$customJS = ilUtil::stripSlashes($_GET['xvid_custom_js']);
+        $customJS = isset($_GET['xvid_custom_js']) ? ilUtil::stripSlashes($_GET['xvid_custom_js']) : null;
+
         $DIC->ui()->mainTemplate()->addOnLoadCode('"' . $customJS . '"');
         $DIC->ui()->mainTemplate()->addOnLoadCode('console.log('. $customJS .')');
 		$this->edit();
@@ -886,7 +896,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	 */
 	protected function getPathForSubtitleFiles()
 	{
-		return ilUtil::getWebspaceDir() . '/xvid/xvid_' . $this->object->getId() . '/subtitles/';
+		return ilFileUtils::getWebspaceDir() . '/xvid/xvid_' . $this->object->getId() . '/subtitles/';
 	}
 
 	public function addSubtitle()
@@ -983,12 +993,12 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	protected function removeSubtitle(){
 
 		$filename = ilUtil::stripSlashes($_POST['remove_subtitle_file']);
-		$file = ilUtil::getWebspaceDir() . '/xvid/xvid_' . $this->object->getId() . '/subtitles/' . $filename;
+		$file = ilFileUtils::getWebspaceDir() . '/xvid/xvid_' . $this->object->getId() . '/subtitles/' . $filename;
 
 		if(file_exists($file)) {
 			unlink($file);
 			$this->object->removeSubtitleData($filename);
-			ilUtil::sendSuccess($this->plugin->txt('subtitle_removed'), true);
+            ilInteractiveVideoPlugin::sendSuccess($this->plugin->txt('subtitle_removed'), true);
 			$this->ctrl->redirect($this, 'addSubtitle');
 			
 		}
@@ -1009,7 +1019,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 		$ilTabs->activateTab('editProperties');
 		$ilTabs->activateSubTab('addSubtitle');
 
-		require_once 'Services/Utilities/classes/class.ilConfirmationGUI.php';
+		require_once 'Services/UIComponent/Confirmation/class.ilConfirmationGUI.php';
 		$confirm = new ilConfirmationGUI();
 		$confirm->setFormAction($this->ctrl->getFormAction($this, 'removeSubtitle'));
 		$confirm->setHeaderText(ilInteractiveVideoPlugin::getInstance()->txt('sure_delete_subtitle'));
@@ -1053,7 +1063,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 				$short_title = $data_short;
 				array_pop($short_title);
 				if($short_title == '') {
-					ilUtil::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('you_need_a_short_title'), true);
+                    ilInteractiveVideoPlugin::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('you_need_a_short_title'), true);
 					$this->ctrl->redirect($this, 'addSubtitle');
 				}
 			}
@@ -1071,8 +1081,8 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	 */
 	protected function fillDataForSubtitles($name, $value, $data)
 	{
-		$name  = ilUtil::stripSlashesRecursive($name);
-		$value = ilUtil::stripSlashesRecursive($value);
+		$name  = ilArrayUtil::stripSlashesRecursive($name);
+		$value = ilArrayUtil::stripSlashesRecursive($value);
 
 		$cut             = substr($name, 2);
 		$cut             = preg_replace('/_vtt$/', '.vtt', $cut);
@@ -1084,7 +1094,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	/**ilMediaPoolPresentationGUI
 	 * @return ilPropertyFormGUI
 	 */
-	public function initEditForm()
+	public function initEditForm(): ilPropertyFormGUI
 	{
 		$form = parent::initEditForm();
 		$this->initEditCustomForm($form);
@@ -1094,7 +1104,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	/**
 	 * Overwriting this method is necessary to handle creation problems with the api
 	 */
-	public function save()
+	public function save(): void
 	{
 		$this->saveObject();
 	}
@@ -1102,7 +1112,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	/**
 	 * Overwriting this method is necessary to handle creation problems with the api
 	 */
-	public function saveObject()
+	public function saveObject(): void
 	{
 		$plugin = ilInteractiveVideoPlugin::getInstance();
 
@@ -1117,11 +1127,11 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 				$plugin->txt($e->getMessage()) != '-rep_robj_xvid_' . $e->getMessage() . '-'
 			)
 			{
-				ilUtil::sendFailure($plugin->txt($e->getMessage()), true);
+                ilInteractiveVideoPlugin::sendFailure($plugin->txt($e->getMessage()), true);
 			}
 			else
 			{
-				ilUtil::sendFailure($e->getMessage(), true);
+                ilInteractiveVideoPlugin::sendFailure($e->getMessage(), true);
 			}
 
 			$this->ctrl->setParameterByClass('ilrepositorygui', 'ref_id', (int)$_GET['ref_id']);
@@ -1158,7 +1168,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 		$item_group->setValue($factory->getDefaultVideoSource());
 		if($non_active)
 		{
-			ilUtil::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('at_least_one_source'));
+            ilInteractiveVideoPlugin::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('at_least_one_source'));
 		}
 		return $a_form;
 	}
@@ -1166,7 +1176,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	/**
 	 * @see ilDesktopItemHandling::addToDesk()
 	 */
-	public function addToDeskObject()
+	public function addToDeskObject(): void
 	{
 		/**
 		 * @var $ilSetting ilSetting
@@ -1181,14 +1191,14 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 
 		include_once './Services/PersonalDesktop/classes/class.ilDesktopItemGUI.php';
 		ilDesktopItemGUI::addToDesktop();
-		ilUtil::sendSuccess($this->lng->txt('added_to_desktop'), true);
+        ilInteractiveVideoPlugin::sendSuccess($this->lng->txt('added_to_desktop'), true);
 		$this->ctrl->redirect($this);
 	}
 
 	/**
 	 * @see ilDesktopItemHandling::removeFromDesk()
 	 */
-	public function removeFromDeskObject()
+	public function removeFromDeskObject(): void
 	{
 		/**
 		 * @var $ilSetting ilSetting
@@ -1203,7 +1213,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 
 		include_once './Services/PersonalDesktop/classes/class.ilDesktopItemGUI.php';
 		ilDesktopItemGUI::removeFromDesktop();
-		ilUtil::sendSuccess($this->lng->txt('removed_from_desktop'), true);
+        ilInteractiveVideoPlugin::sendSuccess($this->lng->txt('removed_from_desktop'), true);
 		$this->ctrl->redirect($this);
 	}
 
@@ -1212,12 +1222,12 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	 * @param int    $a_sub_id
 	 * @return ilObjectListGUI|ilObjInteractiveVideoListGUI
 	 */
-	protected function initHeaderAction($a_sub_type = null, $a_sub_id = null)
+	protected function initHeaderAction($a_sub_type = null, $a_sub_id = null): ?ilObjectListGUI
 	{
         return parent::initHeaderAction();
 	}
 
-	protected function setTabs()
+	protected function setTabs(): void
 	{
 		/**
 		 * @var $ilTabs   ilTabsGUI
@@ -1379,14 +1389,14 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 			!strlen(trim(ilUtil::stripSlashes($_POST['comment_text'])))
 		)
 		{
-			ilUtil::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('missing_comment_text'));
+            ilInteractiveVideoPlugin::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('missing_comment_text'));
 			$this->showContent();
 			return;
 		}
 
 		if(!isset($_POST['comment_time']) || !strlen(trim(ilUtil::stripSlashes($_POST['comment_time']))))
 		{
-			ilUtil::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('missing_stopping_point'));
+            ilInteractiveVideoPlugin::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('missing_stopping_point'));
 			$this->showContent();
 			return;
 		}
@@ -1408,7 +1418,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 		$comment->setIsTableOfContent((int)$_POST['is_table_of_content']);
 		$comment->setCommentTimeEnd($seconds_end);
 		
-		if(array_key_exists('is_reply_to', $_POST))
+		if(isset($_POST['is_reply_to']))
 		{
 			$comment->setIsReplyTo((int) $_POST['is_reply_to']);
 		}
@@ -1421,7 +1431,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 		else
 		{
 			$is_private = 0;
-			if( $_POST['is_private'] == "true" )
+			if( isset($_POST['is_private']) && $_POST['is_private'] == "true" )
 			{
 				$is_private = 1;
 			}
@@ -1449,11 +1459,11 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 
 		if(!isset($_POST['comment_id']) || !is_array($_POST['comment_id']) || !count($_POST['comment_id']))
 		{
-			ilUtil::sendFailure($this->lng->txt('select_one'), true);
+            ilInteractiveVideoPlugin::sendFailure($this->lng->txt('select_one'), true);
             $this->ctrl->redirect($this, 'editComments');
 		}
 
-		require_once 'Services/Utilities/classes/class.ilConfirmationGUI.php';
+		require_once 'Services/UIComponent/Confirmation/class.ilConfirmationGUI.php';
 		$confirm = new ilConfirmationGUI();
 		$confirm->setFormAction($this->ctrl->getFormAction($this, 'deleteComment'));
 		$confirm->setHeaderText(ilInteractiveVideoPlugin::getInstance()->txt('sure_delete_comment'));
@@ -1482,7 +1492,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 		}
 		else
 		{
-			ilUtil::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('invalid_comment_ids'));
+            ilInteractiveVideoPlugin::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('invalid_comment_ids'));
 		}
 	}
 
@@ -1490,7 +1500,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	{
 		if(!isset($_POST['comment_id']) || !is_array($_POST['comment_id']) || !count($_POST['comment_id']))
 		{
-			ilUtil::sendFailure($this->lng->txt('select_one'));
+            ilInteractiveVideoPlugin::sendFailure($this->lng->txt('select_one'));
 			$this->editComments();
 			return;
 		}
@@ -1502,11 +1512,11 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 		if(is_array($wrong_comment_ids) && (count($wrong_comment_ids) == 0))
 		{
 			$this->object->deleteComments($_POST['comment_id']);
-			ilUtil::sendSuccess(ilInteractiveVideoPlugin::getInstance()->txt('comments_successfully_deleted'));
+            ilInteractiveVideoPlugin::sendSuccess(ilInteractiveVideoPlugin::getInstance()->txt('comments_successfully_deleted'));
 		}
 		else
 		{
-			ilUtil::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('invalid_comment_ids'));
+            ilInteractiveVideoPlugin::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('invalid_comment_ids'));
 		}
 		$this->editComments();
 	}
@@ -1738,7 +1748,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 			$this->objComment->update();
 
 			if($comment_time_end <= $comment_time && $comment_time_end !== 0){
-                ilUtil::sendFailure($this->plugin->txt('endtime_warning'));
+                ilInteractiveVideoPlugin::sendFailure($this->plugin->txt('endtime_warning'));
                 $form->setValuesByPost();
                 return $this->editMyComment($form);
             }
@@ -1769,11 +1779,11 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 
 		if(!isset($_POST['comment_id']) || !is_array($_POST['comment_id']) || !count($_POST['comment_id']))
 		{
-			ilUtil::sendFailure($this->lng->txt('select_one'), true);
+            ilInteractiveVideoPlugin::sendFailure($this->lng->txt('select_one'), true);
             $this->ctrl->redirect($this, 'editMyComments');
 		}
 
-		require_once 'Services/Utilities/classes/class.ilConfirmationGUI.php';
+		require_once 'Services/UIComponent/Confirmation/class.ilConfirmationGUI.php';
 		$confirm = new ilConfirmationGUI();
 		$confirm->setFormAction($this->ctrl->getFormAction($this, 'deleteMyComment'));
 		$confirm->setHeaderText(ilInteractiveVideoPlugin::getInstance()->txt('sure_delete_comment'));
@@ -1802,7 +1812,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 		}
 		else
 		{
-			ilUtil::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('invalid_comment_ids'));
+            ilInteractiveVideoPlugin::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('invalid_comment_ids'));
 		}
 	}
 
@@ -1815,7 +1825,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 
 		if(!isset($_POST['comment_id']) || !is_array($_POST['comment_id']) || !count($_POST['comment_id']))
 		{
-			ilUtil::sendFailure($this->lng->txt('select_one'));
+            ilInteractiveVideoPlugin::sendFailure($this->lng->txt('select_one'));
 			$this->editMyComments();
 			return;
 		}
@@ -1827,7 +1837,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 
 		if(is_array($user_ids) && (count($user_ids)> 1))
 		{
-			ilUtil::sendFailure($plugin->txt('invalid_comment_ids'));
+            ilInteractiveVideoPlugin::sendFailure($plugin->txt('invalid_comment_ids'));
 			$this->editMyComments();
 		}
 
@@ -1835,11 +1845,11 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 		if(is_array($wrong_comment_ids) && (count($wrong_comment_ids) == 0))
 		{
 			$this->object->deleteComments($_POST['comment_id']);
-			ilUtil::sendSuccess($plugin->txt('comments_successfully_deleted'));
+            ilInteractiveVideoPlugin::sendSuccess($plugin->txt('comments_successfully_deleted'));
 		}
 		else
 		{
-			ilUtil::sendFailure($plugin->txt('invalid_comment_ids'));
+            ilInteractiveVideoPlugin::sendFailure($plugin->txt('invalid_comment_ids'));
 		}
 		$this->ctrl->redirect($this, 'editMyComments');
 	}
@@ -1857,14 +1867,14 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 			!strlen(trim(ilUtil::stripSlashes($_POST['comment_text'])))
 		)
 		{
-			ilUtil::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('missing_comment_text'));
+            ilInteractiveVideoPlugin::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('missing_comment_text'));
 			$this->editComments();
 			return;
 		}
 
 		if(!isset($_POST['comment_time']) || !strlen(trim(ilUtil::stripSlashes($_POST['comment_time']))))
 		{
-			ilUtil::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('missing_stopping_point'));
+            ilInteractiveVideoPlugin::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('missing_stopping_point'));
 			$this->editComments();
 			return;
 		}
@@ -1896,7 +1906,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 			$comment_time_end = $form->getInput('comment_time_end');
 			if ($comment_time_end > 0 && $comment_time > $comment_time_end) {
 				$valid = false;
-				ilUtil::sendFailure($this->plugin->txt('endtime_warning'));
+                ilInteractiveVideoPlugin::sendFailure($this->plugin->txt('endtime_warning'));
 			}
 			$comment_id = $form->getInput('comment_id');
 			if ($comment_id > 0) {
@@ -2062,13 +2072,13 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 
 			$this->objComment->create();
 
-			ilUtil::sendSuccess($this->lng->txt('saved_successfully'));
+            ilInteractiveVideoPlugin::sendSuccess($this->lng->txt('saved_successfully'));
 			$this->ctrl->redirect($this, 'editComments');
 		}
 		else
 		{
 			$form->setValuesByPost();
-			ilUtil::sendFailure($this->lng->txt('err_check_input'),true);
+            ilInteractiveVideoPlugin::sendFailure($this->lng->txt('err_check_input'),true);
 			if($is_chapter === true) {
                 $this->ctrl->redirect($this, 'showTutorInsertChapterForm');
             }
@@ -2181,7 +2191,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 		{
 			if(!isset($_GET['comment_id']) && !isset($_POST['comment_id']))
 			{
-				ilUtil::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('no_comment_id_given'), true);
+                ilInteractiveVideoPlugin::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('no_comment_id_given'), true);
 				return $this->showContent();
 			}
 			else
@@ -2213,7 +2223,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 		{
 			if(!isset($_GET['comment_id']) && !isset($_POST['comment_id']))
 			{
-				ilUtil::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('no_comment_id_given'), true);
+                ilInteractiveVideoPlugin::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('no_comment_id_given'), true);
 				return $this->showContent();
 			}
 			else
@@ -2483,13 +2493,13 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 
 			$this->performQuestionRefresh($this->objComment->getCommentId(), $form);
 
-			ilUtil::sendSuccess($this->lng->txt('saved_successfully'));
+            ilInteractiveVideoPlugin::sendSuccess($this->lng->txt('saved_successfully'));
 			$this->ctrl->redirect($this, 'editComments');
 		}
 		else
 		{
 			$form->setValuesByPost();
-			ilUtil::sendFailure($this->lng->txt('err_check_input'));
+            ilInteractiveVideoPlugin::sendFailure($this->lng->txt('err_check_input'));
 			$this->showTutorInsertQuestionForm($form);
 		}
 	}
@@ -2534,7 +2544,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 		{
 			if(!isset($_GET['comment_id']) && !isset($_POST['comment_id']))
 			{
-				ilUtil::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('no_comment_id_given'), true);
+                ilInteractiveVideoPlugin::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('no_comment_id_given'), true);
 				return $this->editComments();
 			}
 			else
@@ -2600,14 +2610,21 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 		}
 		else
 		{
-			require_once 'Services/Utilities/classes/class.ilConfirmationGUI.php';
+			require_once 'Services/UIComponent/Confirmation/class.ilConfirmationGUI.php';
 			$confirm = new ilConfirmationGUI();
 			$confirm->setFormAction($this->ctrl->getFormAction($this, 'updateQuestion'));
 			$confirm->setHeaderText(ilInteractiveVideoPlugin::getInstance()->txt('sure_update_question'));
 
 			$confirm->setCancel($this->lng->txt('cancel'), 'editComments');
 			$confirm->setConfirm($this->lng->txt('update'), 'updateQuestion');
-			foreach($_POST as $key=>$value)
+
+            $orig = new ArrayObject($_POST);
+            $data = $orig->getArrayCopy();
+            $keys = array_keys($data);
+            $keyValues = $data[$keys[1]];
+            $form_values = array();
+
+            foreach($keyValues as $key=>$value)
 			{
 				//@todo .... very quick ... very dirty .... 
 				if($key != 'cmd')
@@ -2615,6 +2632,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 					$form_values[$key] = $value;
 				}
 			}
+
 			$confirm->addHiddenItem('form_values', serialize($form_values));
 			$confirm->addHiddenItem('form_files', serialize($_FILES));
 			$tpl->setContent($confirm->getHTML());
@@ -2627,12 +2645,53 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	public function updateQuestion()
 	{
 		$form = $this->initQuestionForm();
-		if(isset($_POST['form_values']))
+		$keyValues = array();
+        $valuesInFormValues = isset($_POST['form_values']);
+        if($valuesInFormValues)
 		{
 			//@todo .... very quick ... very wtf .... 
 			$_POST = unserialize($_POST['form_values']);
 			$_FILES = unserialize($_REQUEST['form_files']);
-		}
+
+            /* hack because CheckInput() eventually accesses the original requestBody unless it finds the key in set_params first */
+            /*foreach($_POST  as $key=>$value)
+            {
+                $form->setRequestParam($key, $value);
+            }
+            */
+
+            foreach ($form->getItems() as $item) {
+                if(is_subclass_of($item, 'ilFormPropertyGUI')){
+                    foreach($_POST  as $key=>$value)
+                    {
+                        $item->setRequestParam($key, $value);
+                        $keyValues[$key] = $value;
+                    }
+                    foreach($_FILES  as $key=>$value)
+                    {
+                        $item->setRequestParam($key, $value);
+                        $keyValues[$key] = $value;
+                    }
+                }
+
+                if(is_subclass_of($item, 'ilSubEnabledFormPropertyGUI')){
+                    foreach ($item->getSubItems() as $subitem) {
+                        if(is_subclass_of($subitem, 'ilFormPropertyGUI')){
+                            foreach($_POST  as $key=>$value)
+                            {
+                                $subitem->setRequestParam($key, $value);
+                                $keyValues[$key] = $value;
+                            }
+                            foreach($_FILES  as $key=>$value)
+                            {
+                                $subitem->setRequestParam($key, $value);
+                                $keyValues[$key] = $value;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
 		if($form->checkInput())
 		{
@@ -2646,13 +2705,30 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 			$this->objComment->setCommentTitle((string)$form->getInput('comment_title'));
 
 			// calculate seconds
-			$this->objComment->setCommentTime($form->getInput('comment_time'));
-			$this->objComment->setCommentTimeEnd($form->getInput('comment_time_end'));
-			$this->objComment->update();
+            if(!$valuesInFormValues) {
+                $this->objComment->setCommentTime($form->getInput('comment_time'));
+            }
+            else {
+                $this->objComment->setCommentTime($keyValues['comment_time']);
+            }
+            if(!$valuesInFormValues) {
+                $comment_time_end = $form->getInput('comment_time_end');
+                if ($comment_time_end == '') $comment_time_end = '00:00:00';
+                $this->objComment->setCommentTimeEnd($comment_time_end);
+            }
+            else {
+                if(array_key_exists('comment_time_end',$keyValues)){
+                    $this->objComment->setCommentTimeEnd($keyValues['comment_time_end']);
+                }
+                else{
+                    $this->objComment->setCommentTimeEnd('00:00:00');
+                }
+            }
+            $this->objComment->update();
 
 			$this->performQuestionRefresh($comment_id, $form);
 
-			ilUtil::sendSuccess($this->lng->txt('saved_successfully'));
+            ilInteractiveVideoPlugin::sendSuccess($this->lng->txt('saved_successfully'));
 			$this->editComments();
 		}
 		else
@@ -2676,12 +2752,12 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 		{
 			$this->object->uploadImage($comment_id, $question, $_FILES['question_image']);
 		}
-		if(array_key_exists('ffmpeg_thumb', $_POST))
+		if(isset($_POST['ffmpeg_thumb']))
 		{
 			$file = ilInteractiveVideoFFmpeg::moveSelectedImage($comment_id, $this->object->getId(), $_POST['ffmpeg_thumb']);
 			$question->setQuestionImage($file);
 		}
-		if(array_key_exists('question_image_delete', $_POST))
+        if(isset($_POST['question_image_delete']))
 		{
 			ilInteractiveVideoFFmpeg::removeSelectedImage($question->getQuestionImage());
 			$question->setQuestionImage(null);
@@ -2831,12 +2907,12 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 
 		if(!isset($_POST['user_id']) || !is_array($_POST['user_id']) || !count($_POST['user_id']))
 		{
-			ilUtil::sendFailure($this->lng->txt('select_one'));
+            ilInteractiveVideoPlugin::sendFailure($this->lng->txt('select_one'));
 			$this->showResults();
 			return;
 		}
 
-		require_once 'Services/Utilities/classes/class.ilConfirmationGUI.php';
+		require_once 'Services/UIComponent/Confirmation/class.ilConfirmationGUI.php';
 		$confirm = new ilConfirmationGUI();
 		$confirm->setFormAction($this->ctrl->getFormAction($this, 'deleteUserResults'));
 		$confirm->setHeaderText(ilInteractiveVideoPlugin::getInstance()->txt('sure_delete_results'));
@@ -2859,7 +2935,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	{
 		if(!isset($_POST['user_id']) || !is_array($_POST['user_id']) || !count($_POST['user_id']))
 		{
-			ilUtil::sendFailure($this->lng->txt('select_one'));
+            ilInteractiveVideoPlugin::sendFailure($this->lng->txt('select_one'));
 			$this->showResults();
 			return;
 		}
@@ -2871,11 +2947,11 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 			$simple = new SimpleChoiceQuestion();
 			$simple->deleteUserResults($user_ids, $this->obj_id);
 			$this->object->refreshLearningProgress();
-			ilUtil::sendSuccess(ilInteractiveVideoPlugin::getInstance()->txt('results_successfully_deleted'));
+            ilInteractiveVideoPlugin::sendSuccess(ilInteractiveVideoPlugin::getInstance()->txt('results_successfully_deleted'));
 		}
 		else
 		{
-			ilUtil::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('invalid_user_ids'));
+            ilInteractiveVideoPlugin::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('invalid_user_ids'));
 		}
 		$this->showResults();
 	}
@@ -2921,12 +2997,12 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 
 		if(!isset($_POST['question_id']) || !is_array($_POST['question_id']) || !count($_POST['question_id']))
 		{
-			ilUtil::sendFailure($this->lng->txt('select_one'));
+            ilInteractiveVideoPlugin::sendFailure($this->lng->txt('select_one'));
 			$this->showQuestionsResults();
 			return;
 		}
 
-		require_once 'Services/Utilities/classes/class.ilConfirmationGUI.php';
+		require_once 'Services/UIComponent/Confirmation/class.ilConfirmationGUI.php';
 		$confirm = new ilConfirmationGUI();
 		$confirm->setFormAction($this->ctrl->getFormAction($this, 'deleteQuestionsResults'));
 		$confirm->setHeaderText(ilInteractiveVideoPlugin::getInstance()->txt('sure_delete_results'));
@@ -2951,7 +3027,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	{
 		if(!isset($_POST['question_id']) || !is_array($_POST['question_id']) || !count($_POST['question_id']))
 		{
-			ilUtil::sendFailure($this->lng->txt('select_one'));
+            ilInteractiveVideoPlugin::sendFailure($this->lng->txt('select_one'));
 			$this->showQuestionsResults();
 			return;
 		}
@@ -2963,11 +3039,11 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 			$simple = new SimpleChoiceQuestion();
 			$simple->deleteQuestionsResults($question_ids);
 			$this->object->refreshLearningProgress();
-			ilUtil::sendSuccess(ilInteractiveVideoPlugin::getInstance()->txt('results_successfully_deleted'));
+            ilInteractiveVideoPlugin::sendSuccess(ilInteractiveVideoPlugin::getInstance()->txt('results_successfully_deleted'));
 		}
 		else
 		{
-			ilUtil::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('invalid_question_ids'));
+            ilInteractiveVideoPlugin::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('invalid_question_ids'));
 		}
 		$this->showQuestionsResults();
 	}
@@ -3002,13 +3078,13 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 	{
 		if(SimpleChoiceQuestion::isLimitAttemptsEnabled((int)$_POST['qid']) == false)
 		{
-			$answer = is_array($_POST['answer']) ? ilUtil::stripSlashesRecursive($_POST['answer']) : array();
+			$answer = is_array($_POST['answer']) ?  ilArrayUtil::stripSlashesRecursive($_POST['answer']) : array();
 			$simple_choice = new SimpleChoiceQuestion();
 			$simple_choice->saveAnswer((int) $_POST['qid'], $answer);
 		}
 		else if(SimpleChoiceQuestion::existUserAnswerForQuestionId((int)$_POST['qid']) == false)
 		{
-			$answer = is_array($_POST['answer']) ? ilUtil::stripSlashesRecursive($_POST['answer']) : array();
+			$answer = is_array($_POST['answer']) ? ilArrayUtil::stripSlashesRecursive($_POST['answer']) : array();
 			$simple_choice = new SimpleChoiceQuestion();
 			$simple_choice->saveAnswer((int) $_POST['qid'], $answer);
 		}
@@ -3035,7 +3111,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 			$time = '00:00:00.0';
 		}
 		$path = CLIENT_WEB_DIR . '/xvid/xvid_'.$this->object->getId().'/images';
-		ilUtil::makeDirParents($path);
+        ilFileUtils::makeDirParents($path);
 		$factory = new ilInteractiveVideoSourceFactory();
 		$source = $factory->getVideoSourceObject($this->object->getSourceId());
 		if($source->isFileBased())
@@ -3226,10 +3302,23 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 		ilUtil::deliverData($csvoutput, $this->object->getTitle() .  ".csv");
 	}
 #endregion
+
+    public function getObjectId() : int
+    {
+        return $this::getObject()->getId();
+    }
+    public function getObject() : ?ilObject
+    {
+        return parent::getObject();
+    }
+    public function getPlugin() : ilPlugin
+    {
+        return parent::getPlugin();
+    }
 	/**
 	 * @param $a_target
 	 */
-	public static function _goto($a_target)
+	public static function _goto($a_target): void
 	{
 		/**
 		 * @var $ilCtrl ilCtrl
@@ -3263,7 +3352,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 		}
 		else if ($ilAccess->checkAccess("read", "", ROOT_FOLDER_ID))
 		{
-			ilUtil::sendFailure(sprintf($lng->txt("msg_no_perm_read_item"),
+            ilInteractiveVideoPlugin::sendFailure(sprintf($lng->txt("msg_no_perm_read_item"),
 				ilObject::_lookupTitle(ilObject::_lookupObjId($ref_id))));
 			include_once("./Services/Object/classes/class.ilObjectGUI.php");
 			ilObjectGUI::_gotoRepositoryRoot();

@@ -624,11 +624,11 @@ class SimpleChoiceQuestion
 			));
 		if(is_array($_POST['answer']) && count($_POST['answer']) > 0 && $_POST['question_type'] != self::REFLECTION)
 		{
-			foreach(ilUtil::stripSlashesRecursive($_POST['answer']) as $key => $value)
+			foreach(ilArrayUtil::stripSlashesRecursive($_POST['answer']) as $key => $value)
 			{
 				$answer_id = $ilDB->nextId(self::TABLE_NAME_QUESTION_TEXT);
 				if($value == null){$value = ' ';}
-				if(is_array($_POST['correct']) && array_key_exists($key, ilUtil::stripSlashesRecursive($_POST['correct'])))
+				if(is_array($_POST['correct']) && array_key_exists($key, ilArrayUtil::stripSlashesRecursive($_POST['correct'])))
 				{
 					$correct = 1;
 				}
@@ -957,7 +957,7 @@ class SimpleChoiceQuestion
 		{
 			foreach(ilUtil::stripSlashesRecursive($_POST['answer']) as $key => $value)
 			{
-				if(is_array($_POST['correct']) && array_key_exists($key, ilUtil::stripSlashesRecursive($_POST['correct'])))
+				if(is_array($_POST['correct']) && array_key_exists($key, ilArrayUtil::stripSlashesRecursive($_POST['correct'])))
 				{
 					$correct += 1;
 				}
@@ -985,13 +985,15 @@ class SimpleChoiceQuestion
          */
 
 		global $ilDB;
-		$res = $ilDB->queryF('SELECT * FROM ' . self::TABLE_NAME_QUESTION . ' WHERE comment_id = %s',
+
+        $question_id = 0;
+        $res = $ilDB->queryF('SELECT * FROM ' . self::TABLE_NAME_QUESTION . ' WHERE comment_id = %s',
 			array('integer'), array($comment_id));
 
 		$row = $ilDB->fetchAssoc($res);
-
-		$question_id = (int)$row['question_id'];
-
+        if($row){
+		    $question_id = (int)$row['question_id'];
+        }
 		return $question_id;
 	}
 

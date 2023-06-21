@@ -16,7 +16,7 @@ class ilInteractiveVideoPreviewPicker extends ilImageFileInputGUI
 	
 	protected $path_to_video;
 
-	function insert($a_tpl)
+	function insert($a_tpl): void
 	{
 		parent::insert($a_tpl);
 

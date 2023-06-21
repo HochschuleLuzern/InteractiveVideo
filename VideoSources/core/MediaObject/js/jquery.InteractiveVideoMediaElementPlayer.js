@@ -1,6 +1,4 @@
-$(document).ready(function () {
-
-});
+window.addEventListener("load",function(event) {
 
 (function ($) {
 	il.Util.addOnLoad(function () {
@@ -81,3 +79,4 @@ $(document).ready(function () {
 
 	});
 })(jQuery);
+},false);

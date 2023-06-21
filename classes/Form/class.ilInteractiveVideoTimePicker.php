@@ -13,16 +13,6 @@ class ilInteractiveVideoTimePicker extends ilSubEnabledFormPropertyGUI
 	/**
 	 * @var string
 	 */
-	protected $title;
-
-	/**
-	 * @var string
-	 */
-	protected $info;
-
-	/**
-	 * @var string
-	 */
 	protected $id;
 
 	/**
@@ -41,12 +31,14 @@ class ilInteractiveVideoTimePicker extends ilSubEnabledFormPropertyGUI
 	/**
 	 * @return bool
 	 */
-	public function checkInput()
+	public function checkInput(): bool
 	{
+        /*
 		if(!is_array($_POST[$this->getPostVar()]))
 		{
 			$_POST[$this->getPostVar()] = $this->getSecondsFromString(ilUtil::stripSlashes($_POST[$this->getPostVar()]));
 		}
+        */
 		return $this->checkSubItemsInput();
 	}
 
@@ -154,6 +146,6 @@ class ilInteractiveVideoTimePicker extends ilSubEnabledFormPropertyGUI
 	 */
 	public static function getTimeStringFromSeconds($seconds)
 	{
-		return gmdate('H:i:s', $seconds);
+		return gmdate('H:i:s', (int)$seconds);
 	}
 }

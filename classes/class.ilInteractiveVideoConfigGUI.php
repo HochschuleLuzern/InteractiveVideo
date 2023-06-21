@@ -6,6 +6,7 @@ require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/In
 
 /**
  * Class ilInteractiveVideoConfigGUI
+ *  @ilCtrl_IsCalledBy ilInteractiveVideoConfigGUI: ilObjComponentSettingsGUI
  */
 class ilInteractiveVideoConfigGUI extends ilPluginConfigGUI
 {
@@ -73,7 +74,7 @@ class ilInteractiveVideoConfigGUI extends ilPluginConfigGUI
 	/**
 	 * {@inheritdoc}
 	 */
-	public function performCommand($cmd)
+	public function performCommand($cmd): void
 	{
 		switch($cmd)
 		{
@@ -115,7 +116,7 @@ class ilInteractiveVideoConfigGUI extends ilPluginConfigGUI
 		$form = new ilPropertyFormGUI();
 		$db_updater = new ilInteractiveVideoDbUpdater();
 
-		$source = ilUtil::stripSlashes($_GET['video_source']);
+		$source = isset($_GET['video_source']) ? ilUtil::stripSlashes($_GET['video_source']) : '';
 		$form->setFormAction($this->ctrl->getFormAction($this, 'showConfigurationForm'));
 		$mapping = array();
 
@@ -206,7 +207,7 @@ class ilInteractiveVideoConfigGUI extends ilPluginConfigGUI
 			}
 			catch(ilException $e)
 			{
-				ilUtil::sendFailure($this->lng->txt('form_input_not_valid'));
+                ilInteractiveVideoPlugin::sendFailure($this->lng->txt('form_input_not_valid'));
 			}
 		}
 
@@ -228,7 +229,7 @@ class ilInteractiveVideoConfigGUI extends ilPluginConfigGUI
 			}
 			catch(ilException $e)
 			{
-				ilUtil::sendFailure($this->lng->txt('form_input_not_valid'));
+                ilInteractiveVideoPlugin::sendFailure($this->lng->txt('form_input_not_valid'));
 			}
 		}
 		$db_updater = new ilInteractiveVideoDbUpdater();
@@ -266,7 +267,7 @@ class ilInteractiveVideoConfigGUI extends ilPluginConfigGUI
 		}
 		else
 		{
-			ilUtil::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('select_at_least_one'), true);
+			ilInteractiveVideoPlugin::sendFailure(ilInteractiveVideoPlugin::getInstance()->txt('select_at_least_one'), true);
 		}
 	}
 }

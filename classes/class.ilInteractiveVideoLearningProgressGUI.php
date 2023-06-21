@@ -27,17 +27,17 @@ class ilInteractiveVideoLearningProgressGUI extends ilLearningProgressBaseGUI
     /**
      * @var ilLanguage
      */
-    public $lng;
+    public ilLanguage $lng;
 
     /**
      * @var ilCtrl
      */
-    public $ctrl;
+    public ilCtrlInterface $ctrl;
 
     /**
      * @var ilTemplate
      */
-    public $tpl;
+    public ilGlobalTemplateInterface $tpl;
 
     /**
      * @var ilInteractiveVideoPlugin
@@ -75,7 +75,7 @@ class ilInteractiveVideoLearningProgressGUI extends ilLearningProgressBaseGUI
     /**
      * @return int
      */
-    public function getObjId()
+    public function getObjId(): int
     {
         return $this->object->getId();
     }
@@ -183,7 +183,7 @@ class ilInteractiveVideoLearningProgressGUI extends ilLearningProgressBaseGUI
             $this->object->setLearningProgressMode($new_mode);
             $this->object->update();
 
-            ilUtil::sendSuccess($this->lng->txt('trac_settings_saved'), true);
+            ilInteractiveVideoPlugin::sendSuccess($this->lng->txt('trac_settings_saved'), true);
             if ($mode_changed) {
                 $this->ctrl->redirect($this, 'refreshStatusAndShowLPSettings');
             }
@@ -383,7 +383,7 @@ class ilInteractiveVideoLearningProgressGUI extends ilLearningProgressBaseGUI
             $marks->setMark($form->getInput('mark'));
             $marks->setComment($form->getInput('comment'));
             $marks->update();
-            ilUtil::sendSuccess($this->lng->txt('trac_update_edit_user'));
+            ilInteractiveVideoPlugin::sendSuccess($this->lng->txt('trac_update_edit_user'));
             return $this->showLPUsers();
         }
 

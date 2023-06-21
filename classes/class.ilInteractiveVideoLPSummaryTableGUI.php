@@ -42,7 +42,7 @@ class ilInteractiveVideoLPSummaryTableGUI extends ilTrSummaryTableGUI
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function isPercentageAvailable($a_obj_id)
+	protected function isPercentageAvailable($a_obj_id): bool
 	{
 		if($this->isLearningProgressDeactivated())
 		{
@@ -55,7 +55,7 @@ class ilInteractiveVideoLPSummaryTableGUI extends ilTrSummaryTableGUI
 	/**
 	 * {@inheritdoc}
 	 */
-	public function searchFilterListener($a_ref_id, $a_data)
+	public function searchFilterListener($a_ref_id, $a_data): bool
 	{
 		$status = parent::searchFilterListener($a_ref_id, $a_data);
 
@@ -73,7 +73,7 @@ class ilInteractiveVideoLPSummaryTableGUI extends ilTrSummaryTableGUI
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function getSelectableUserColumns($a_in_course = false, $a_in_group = false)
+	protected function getSelectableUserColumns($a_in_course = false, $a_in_group = false): array
 	{
 		$columns = parent::getSelectableUserColumns($a_in_course, $a_in_group);
 
@@ -89,7 +89,7 @@ class ilInteractiveVideoLPSummaryTableGUI extends ilTrSummaryTableGUI
 	/**
 	 * {@inheritdoc}
 	 */
-	function getSelectableColumns()
+	function getSelectableColumns(): array
 	{
 		$columns = parent::getSelectableColumns();
 
@@ -113,7 +113,7 @@ class ilInteractiveVideoLPSummaryTableGUI extends ilTrSummaryTableGUI
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function fillRow($a_set)
+	protected function fillRow($a_set): void
 	{
 		/**
 		 * $lng ilLanguage
@@ -182,7 +182,7 @@ class ilInteractiveVideoLPSummaryTableGUI extends ilTrSummaryTableGUI
 	/**
 	 * {@inheritdoc}
 	 */
-	public function initFilter($a_split_learning_resources = false, $a_include_no_status_filter = true)
+	public function initFilter($a_split_learning_resources = false, $a_include_no_status_filter = true): void
 	{
 		$this->filter = array();
 	}

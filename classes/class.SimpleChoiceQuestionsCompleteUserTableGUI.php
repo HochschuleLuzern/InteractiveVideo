@@ -14,7 +14,7 @@ class SimpleChoiceQuestionsCompleteUserTableGUI extends ilTable2GUI
 	/**
 	 * @var ilCtrl
 	 */
-	protected $ctrl;
+	protected ilCtrl $ctrl;
 
 	/**
 	 * SimpleChoiceQuestionsCompleteUserTableGUI constructor.
@@ -31,19 +31,19 @@ class SimpleChoiceQuestionsCompleteUserTableGUI extends ilTable2GUI
 
 		$this->ctrl = $ilCtrl;
 
-		$this->setId('xvid_questions_' . $a_parent_obj->object->getId());
+		$this->setId('xvid_questions_' . $a_parent_obj->getObjectId());
 		parent::__construct($a_parent_obj, $a_parent_cmd);
 		$this->setFormAction($this->ctrl->getFormAction($a_parent_obj, $a_parent_cmd));
-		$this->setTitle($a_parent_obj->plugin->txt('complete_question_results'));
-		$this->setRowTemplate('tpl.dynamic_question_row.html', $a_parent_obj->plugin->getDirectory());
-		$this->addCommandButton('completeCsvExport', $a_parent_obj->plugin->txt('csv_export'));
+		$this->setTitle($a_parent_obj->getPlugin()->txt('complete_question_results'));
+		$this->setRowTemplate('tpl.dynamic_question_row.html', $a_parent_obj->getPlugin()->getDirectory());
+		$this->addCommandButton('completeCsvExport', $a_parent_obj->getPlugin()->txt('csv_export'));
 		$this->addColumn($lng->txt('name'));
 		foreach($colum_head as $key => $value)
 		{
 			$this->addColumn($value);
 		}
-		$this->addColumn($a_parent_obj->plugin->txt('answered'));
-		$this->addColumn($a_parent_obj->plugin->txt('sum'));
+		$this->addColumn($a_parent_obj->getPlugin()->txt('answered'));
+		$this->addColumn($a_parent_obj->getPlugin()->txt('sum'));
 		$this->setShowRowsSelector(false);
 
 	}
@@ -52,7 +52,7 @@ class SimpleChoiceQuestionsCompleteUserTableGUI extends ilTable2GUI
 	 * @param string $column
 	 * @return bool
 	 */
-	public function numericOrdering($column)
+	public function numericOrdering($column): bool
 	{
 		if('question_id' == $column)
 		{
@@ -66,7 +66,7 @@ class SimpleChoiceQuestionsCompleteUserTableGUI extends ilTable2GUI
 	 * @param array $a_set
 	 * @internal param array $row
 	 */
-	protected function fillRow($a_set)
+	protected function fillRow($a_set): void
 	{
 		global $lng;
 		$current_selection_list = new ilAdvancedSelectionListGUI();

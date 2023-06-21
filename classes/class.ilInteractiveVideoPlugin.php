@@ -1,7 +1,7 @@
 <?php
 /* Copyright (c) 1998-2015 ILIAS open source, Extended GPL, see docs/LICENSE */
 
-require_once 'Services/Repository/classes/class.ilRepositoryObjectPlugin.php';
+require_once 'Services/Repository/PluginSlot/class.ilRepositoryObjectPlugin.php';
 
 /**
  * Class ilInteractiveVideoPlugin
@@ -34,26 +34,56 @@ class ilInteractiveVideoPlugin extends ilRepositoryObjectPlugin
 	 */
 	private static $instance = null;
 
+    public function __construct()
+    {
+        global $DIC;
+        // dont call aprent constructor if $DIC not initialised, ie we are being instantiated through reflection during build of artifacts
+        if( $DIC->offsetExists("component.factory")){
+            parent::__construct($DIC->database(), $DIC["component.repository"],'xvid');
+        }
+    }
+
 	/**
 	 * @return ilInteractiveVideoPlugin | ilPlugin
 	 */
-	public static function getInstance()
+    	public static function getInstance()
 	{
 		if(null === self::$instance)
 		{
-			require_once 'Services/Component/classes/class.ilPluginAdmin.php';
-			return self::$instance = ilPluginAdmin::getPluginObject(
+			//require_once 'Services/Component/classes/class.ilPluginAdmin.php';
+            require_once 'Services/Repository/PluginSlot/class.ilObjectPlugin.php';
+/*
+ 			return self::$instance = ilPluginAdmin::getPluginObject(
 				self::CTYPE,
 				self::CNAME,
 				self::SLOT_ID,
 				self::PNAME
 			);
+
+            return self::$instance = ilObjectPlugin::getPluginObjectByType(
+                self::PNAME
+            );
+*/
+            return self::$instance = new ilInteractiveVideoPlugin();
 		}
 
 		return self::$instance;
 	}
 
-    protected function beforeActivation()
+    /**
+     * Include (once) a class file
+     */
+    public function includeClass($a_class_file_name)
+    {
+       global $DIC;
+       // dont include if $DIC not initialised, ie we are being instantiated through reflection during build of artifacts
+       if( $DIC->offsetExists("component.factory")){
+            $dir = $this->getDirectory() . "/classes";
+            include_once($dir . "/" . $a_class_file_name);
+        }
+    }
+
+    protected function beforeActivation(): bool
     {
         $return = parent::beforeActivation();
 
@@ -82,12 +112,12 @@ class ilInteractiveVideoPlugin extends ilRepositoryObjectPlugin
     /**
 	 * @return string
 	 */
-	public function getPluginName()
+	public function getPluginName(): string
 	{
 		return self::PNAME;
 	}
 
-    protected function uninstallCustom()
+    protected function uninstallCustom(): void
     {
         /** @var $ilDB ilDBInterface */
         global $ilDB;
@@ -199,8 +229,81 @@ class ilInteractiveVideoPlugin extends ilRepositoryObjectPlugin
 		return version_compare(ILIAS_VERSION_NUMERIC, '5.2.0', '>=');
 	}
 
-	public function allowCopy()
+	public function allowCopy(): bool
 	{
 		return true;
 	}
+
+    /**
+     * Send Info Message to Screen.
+     *
+     * @param	string	message
+     * @param	boolean	if true message is kept in session
+     * @static
+     *
+     */
+
+    public static function sendInfo($a_info = "", $a_keep = false)
+    {
+        global $DIC;
+
+        if(isset($DIC["tpl"])) {
+            $tpl = $DIC["tpl"];
+            $tpl->setOnScreenMessage("info", $a_info, $a_keep);
+        }
+    }
+
+    /**
+     * Send Failure Message to Screen.
+     *
+     * @param	string	message
+     * @param	boolean	if true message is kept in session
+     * @static
+     *
+     */
+
+    public static function sendFailure($a_info = "", $a_keep = false)
+    {
+        global $DIC;
+
+        if (isset($DIC["tpl"])) {
+            $tpl = $DIC["tpl"];
+            $tpl->setOnScreenMessage("failure", $a_info, $a_keep);
+        }
+    }
+
+    /**
+     * Send Question to Screen.
+     *
+     * @param	string	message
+     * @param	boolean	if true message is kept in session
+     * @static	*/
+    public static function sendQuestion($a_info = "", $a_keep = false)
+    {
+        global $DIC;
+
+        if(isset($DIC["tpl"])) {
+            $tpl = $DIC["tpl"];
+            $tpl->setOnScreenMessage("question", $a_info, $a_keep);
+        }
+    }
+
+    /**
+     * Send Success Message to Screen.
+     *
+     * @param	string	message
+     * @param	boolean	if true message is kept in session
+     * @static
+     *
+     */
+    public static function sendSuccess($a_info = "", $a_keep = false)
+    {
+        global $DIC;
+
+        /** @var ilTemplate $tpl */
+        if(isset($DIC["tpl"])) {
+            $tpl = $DIC["tpl"];
+            $tpl->setOnScreenMessage("success", $a_info, $a_keep);
+        }
+    }
 }

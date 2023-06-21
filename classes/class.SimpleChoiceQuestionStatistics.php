@@ -112,7 +112,8 @@ class SimpleChoiceQuestionStatistics
 			{
 				$return_sums[$id]['answered'] = 0;
 				$return_sums[$id]['sum']      = 0;
-			}
+                $return_sums[$id]['user_id']  = $id;
+            }
 			foreach($questions_list as $key => $value)
 			{
 				if($key == $row['question_id'])
@@ -160,6 +161,7 @@ class SimpleChoiceQuestionStatistics
 			{
 				$return_value['users'][$key]['sum'] = '0%';
 			}
+            $return_value['users'][$key]['user_id']  = $value['user_id'];
 
 		}
 
@@ -175,6 +177,12 @@ class SimpleChoiceQuestionStatistics
 			array('integer'), array((int)$oid));
 		while($row = $ilDB->fetchAssoc($res))
 		{
+            if(!array_key_exists($row['user_id'],$return_value['answers'])){
+                $return_value['answers'][$row['user_id']] = array();
+            }
+            if(!array_key_exists($row['question_id'],$return_value['answers'][$row['user_id']])){
+                $return_value['answers'][$row['user_id']][$row['question_id']] = '';
+            }
 			$return_value['answers'][$row['user_id']][$row['question_id']] .= chr(13) . $row['answer'];
 		}
 		return $return_value;
@@ -232,7 +240,16 @@ class SimpleChoiceQuestionStatistics
 		$questions = array();
 		while($row = $ilDB->fetchAssoc($res))
 		{
-			if($row['points'] == null)
+            if(!array_key_exists($row['question_id'],$questions)){
+                $questions[$row['question_id']] = array();
+            }
+            if(!array_key_exists('answered',$questions[$row['question_id']])){
+                $questions[$row['question_id']]['answered'] = 0;
+            }
+            if(!array_key_exists('correct',$questions[$row['question_id']])){
+                $questions[$row['question_id']]['correct'] = 0;
+            }
+            if($row['points'] == null)
 			{
 				$questions[$row['question_id']]['answered'] = 0;
 				$questions[$row['question_id']]['correct']  = 0;
@@ -244,7 +261,8 @@ class SimpleChoiceQuestionStatistics
 			}
 			$questions[$row['question_id']]['comment_id']    = $row['comment_id'];
 			$questions[$row['question_id']]['comment_title'] = $row['comment_title'];
-			$questions[$row['question_id']]['neutral_answer'] = $row['neutral_answer'];
+            $questions[$row['question_id']]['neutral_answer'] = $row['neutral_answer'];
+            $questions[$row['question_id']]['user_id'] = $row['user_id'];
 
 		}
 		$results = array();
@@ -257,6 +275,7 @@ class SimpleChoiceQuestionStatistics
 			$results[$counter]['answered']      = $value['answered'];
 			$results[$counter]['correct']       = $value['correct'];
 			$results[$counter]['neutral_question'] = $value['neutral_answer'];
+            $results[$counter]['user_id'] = $value['user_id'];
 			if($value['neutral_answer'] == 1)
 			{
 				$results[$counter]['percentage'] = '';

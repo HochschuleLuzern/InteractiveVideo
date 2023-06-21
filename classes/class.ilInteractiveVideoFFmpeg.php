@@ -15,15 +15,15 @@ class ilInteractiveVideoFFmpeg extends ilFFmpeg
 	 * @return string
 	 * @throws ilFFmpegException
 	 */
-	static function extractImage($a_file, $a_target_filename, $a_target_dir = '', $a_sec = 1)
+	static function extractImage($a_file, $a_target_filename, $a_target_dir = '', $a_sec = 1): string
 	{
 		$spi = pathinfo($a_file);
 		$target_dir = ($a_target_dir != '') ? $a_target_dir : $spi['dirname'];
 
-		ilUtil::makeDirParents($target_dir);
+        ilFileUtils::makeDirParents($target_dir);
 		$target_file = $target_dir.'/'.$a_target_filename;
 
-		$cmd = ' -ss '.ilUtil::escapeShellArg($a_sec).' -y -i '.ilUtil::escapeShellArg($a_file).' -r 1 -f image2 -vframes 1 '.ilUtil::escapeShellArg($target_file);
+		$cmd = ' -ss '.ilShellUtil::escapeShellArg($a_sec).' -y -i '.ilShellUtil::escapeShellArg($a_file).' -r 1 -f image2 -vframes 1 '.ilShellUtil::escapeShellArg($target_file);
 		$ret = self::exec($cmd. ' 2>&1');
 		self::$last_return = $ret;
 

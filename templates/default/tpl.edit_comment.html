@@ -28,10 +28,11 @@
 {CONFIG}
 
 <script type="text/javascript">
+	window.addEventListener("load",function(event) {
 	$("#ilInteractiveVideoTutorCommentSubmit, #ilInteractiveVideoTutorQuestionSubmit, #ilInteractiveVideoChapterSubmit").on("click", function(e) {
 		$('#comment_time').val(il.InteractiveVideoPlayerAbstract.currentTime("{PLAYER_ID}"));
 	});
-
+	},false);
 </script>
 {MODAL_OVERLAY}
 

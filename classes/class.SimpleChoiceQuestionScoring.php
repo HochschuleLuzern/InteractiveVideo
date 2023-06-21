@@ -89,6 +89,7 @@ class SimpleChoiceQuestionScoring
 			$results[$counter]['question_id'] = $row['question_id'];
 			$results[$counter]['title']       = $row['comment_title'];
 			$results[$counter]['neutral_answer'] = $row['neutral_answer'];
+            $results[$counter]['user_id'] = $row['user_id'];
 			if($answered[$row['question_id']] !== null)
 			{
 				$results[$counter]['answered'] = 1;
@@ -132,9 +133,10 @@ class SimpleChoiceQuestionScoring
 			{
 				$results[$counter]['points']   = 0;
 			}
+            $results[$counter]['neutral_answer'] = '';
+            $results[$counter]['user_id'] = $results[$counter-1]['user_id'];
 
 		}
-		$results[$counter]['neutral_answer'] = '';
 		return $results;
 	}
 

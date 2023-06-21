@@ -129,7 +129,7 @@ class ilInteractiveVideoSourceFactory
 	 */
 	public function isActive($class)
 	{
-		return (bool) $this->sources_settings[$class]['active'];
+		return isset($this->sources_settings[$class]) ? (bool) $this->sources_settings[$class]['active'] : false;
 	}
 
 	/**
@@ -207,7 +207,7 @@ class ilInteractiveVideoSourceFactory
 			$ilDB->insert(self::TABLE_NAME, array('plugin_name'		=> array('text', $key), 
 													'is_activated'	=> array('integer', $value), 
 													'plugin_id'		=> array('text', $mapping[$key]['id']),
-													'db_update'		=> array('text', $this->sources_settings[$key]['db_update']),
+													'db_update'		=> array('text', isset($this->sources_settings[$key]) ? $this->sources_settings[$key]['db_update'] : null),
 													'class_path'	=> array('text', $mapping[$key]['path'])
 			));
 		}

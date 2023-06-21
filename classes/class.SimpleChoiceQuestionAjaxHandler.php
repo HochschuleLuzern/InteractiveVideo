@@ -48,7 +48,7 @@ class SimpleChoiceQuestionAjaxHandler
 			{
 					if($score === 0)
 					{
-						if($feedback['wrong'] === null)
+                        if(!array_key_exists('wrong',$feedback) || $feedback['wrong'] === null)
 						{
 							$feedback['wrong'] = '';
 						}
@@ -72,7 +72,7 @@ class SimpleChoiceQuestionAjaxHandler
 					}
 					else
 					{
-						if($feedback['correct'] === null)
+						if(!array_key_exists('correct',$feedback) || $feedback['correct'] === null)
 						{
 							$feedback['correct'] = '';
 						}
@@ -99,7 +99,7 @@ class SimpleChoiceQuestionAjaxHandler
 				}
 				else
 				{
-					if($feedback['correct'] === null)
+					if(!array_key_exists('correct',$feedback) || $feedback['correct'] === null)
 					{
 						$feedback['correct'] = '';
 					}

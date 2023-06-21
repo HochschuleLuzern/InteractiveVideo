@@ -15,7 +15,7 @@ class ilInteractiveVideoCommentsTableGUI extends ilTable2GUI
 	/**
 	 * @var ilCtrl
 	 */
-	protected $ctrl;
+	protected ilCtrl $ctrl;
 
     /**
      * @var int 
@@ -46,11 +46,11 @@ class ilInteractiveVideoCommentsTableGUI extends ilTable2GUI
 		$this->ctrl = $ilCtrl;
 		$this->DIC = $DIC;
 
-		$this->setId('xvid_comments_' . $a_parent_obj->object->getId());
+		$this->setId('xvid_comments_' . $a_parent_obj->getObjectId());
 		parent::__construct($a_parent_obj, $a_parent_cmd);
 		if($a_parent_cmd === "editMyComments"){
             $ilToolbar->addButton(
-                $a_parent_obj->plugin->txt('export_comments'),
+                $a_parent_obj->getPlugin()->txt('export_comments'),
                 $ilCtrl->getLinkTarget($a_parent_obj, 'exportMyComments')
             );
         }
@@ -59,37 +59,37 @@ class ilInteractiveVideoCommentsTableGUI extends ilTable2GUI
 		$this->setDefaultOrderDirection('ASC');
 		$this->setDefaultOrderField('comment_time');
 
-		$title = $a_parent_obj->plugin->txt('questions_comments_new');
+		$title = $a_parent_obj->getPlugin()->txt('questions_comments_new');
 		if($a_parent_cmd == 'editMyComments')
 		{
-			$title = $a_parent_obj->plugin->txt('my_comments');
+			$title = $a_parent_obj->getPlugin()->txt('my_comments');
 		}
 		
 		$this->setTitle($title);
-		$this->setRowTemplate('tpl.row_comments.html', $a_parent_obj->plugin->getDirectory());
+		$this->setRowTemplate('tpl.row_comments.html', $a_parent_obj->getPlugin()->getDirectory());
 
 		$this->addColumn('', 'comment_id',  '1px', true);
 
 		$this->addColumn($this->lng->txt('time'), 'comment_time');
-		$this->addColumn($a_parent_obj->plugin->txt('time_end'), 'comment_time_end');
+		$this->addColumn($a_parent_obj->getPlugin()->txt('time_end'), 'comment_time_end');
 		if($a_parent_cmd == 'editComments')
 		{
 			$this->addColumn($this->lng->txt('user'), 'user_id');
 		}
 		$this->addColumn($this->lng->txt('title'), 'title');
-		$this->addColumn($a_parent_obj->plugin->txt('comment_table_title'), 'comment_text');
-		if($ilAccess->checkAccess('write', '', $a_parent_obj->object->getRefId()) && $a_parent_cmd == 'editComments')
+		$this->addColumn($a_parent_obj->getPlugin()->txt('comment_table_title'), 'comment_text');
+		if($ilAccess->checkAccess('write', '', $a_parent_obj->getObject()->getRefId()) && $a_parent_cmd == 'editComments')
 		{
-			$this->addColumn($a_parent_obj->plugin->txt('type'), 'type');
-            $this->addColumn($a_parent_obj->plugin->txt('compulsory'), 'compulsory', '10%');
+			$this->addColumn($a_parent_obj->getPlugin()->txt('type'), 'type');
+            $this->addColumn($a_parent_obj->getPlugin()->txt('compulsory'), 'compulsory', '10%');
 			//$this->addColumn($a_parent_obj->plugin->txt('tutor'), 'is_tutor');
 			
 //			$this->addCommandButton('showTutorInsertCommentForm', $this->lng->txt('insert'));
 		}
 		else
 		{
-            $this->addColumn($a_parent_obj->plugin->txt('compulsory'), 'compulsory', '10%');
-			$this->addColumn($a_parent_obj->plugin->txt('visibility'), 'is_private');
+            $this->addColumn($a_parent_obj->getPlugin()->txt('compulsory'), 'compulsory', '10%');
+			$this->addColumn($a_parent_obj->getPlugin()->txt('visibility'), 'is_private');
 		}
 
 		$this->addColumn($this->lng->txt('actions'), '', '10%');
@@ -112,7 +112,7 @@ class ilInteractiveVideoCommentsTableGUI extends ilTable2GUI
 	 * @param string $column
 	 * @return bool
 	 */
-	public function numericOrdering($column)
+	public function numericOrdering($column): bool
 	{
 		if('comment_time' == $column || 'comment_time_end' ==  $column )
 		{
@@ -125,7 +125,7 @@ class ilInteractiveVideoCommentsTableGUI extends ilTable2GUI
 	/**
 	 * @param array $a_set
 	 */
-	protected function fillRow($a_set)
+	protected function fillRow($a_set): void
 	{
         if($this->isPublic() == 0 && $this->DIC->user()->getId() != $a_set['user_id'] && !$a_set['is_interactive']) {
             $this->tpl->setCurrentBlock('no_row');
@@ -138,7 +138,7 @@ class ilInteractiveVideoCommentsTableGUI extends ilTable2GUI
 		{
 			if($key == 'comment_id')
 			{
-				$value = ilUtil::formCheckbox(0, 'comment_id[]', $value);
+				$value = ilLegacyFormElementsUtil::formCheckbox(0, 'comment_id[]', $value);
 			}
 			else if($key == 'user_id')
 			{
@@ -178,14 +178,14 @@ class ilInteractiveVideoCommentsTableGUI extends ilTable2GUI
 
 		$this->ctrl->setParameter($this->parent_obj, 'comment_id', $a_set['comment_id']);
 		
-		if($a_set['is_interactive'] == 1)
+		if(isset($a_set['is_interactive']) && $a_set['is_interactive'] == 1)
 		{
 			$link_target =  $this->ctrl->getLinkTarget($this->parent_obj,$this->parent_cmd == 'editComments' ?  'editQuestion' : 'editComment');
 		}	
 		else
 		{
 			$link_target =  $this->ctrl->getLinkTarget($this->parent_obj,$this->parent_cmd == 'editComments' ?  'editComment' : 'editMyComment');
-            if($a_set['is_table_of_content'] === "1") {
+            if(isset($a_set['is_table_of_content']) && $a_set['is_table_of_content'] === "1") {
                 $link_target =  $this->ctrl->getLinkTarget($this->parent_obj,'editChapter');
             }
 		}
