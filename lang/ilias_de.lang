@@ -220,3 +220,13 @@ best_solution_text#:#Bestmögliche Lösung
 best_solution_text_info#:#Wenn ein Kommentarfeld angeboten wird (siehe unten), kann sich ein Nutzer die Lösung erst anzeigen lassen, wenn er/sie eine Antwort gespeichert hat.
 show_best_solution_info#:#Nachdem die Frage beantwortet wurde, können sich Nutzer die richtige Lösung anzeigen lassen (über Button «Lösung zeigen»).
 at_least_one_answer#:#Bitte wählen Sie eine Antwort aus
+
+ytb_youtube_url#:#YouTube-URL
+ytb_youtube_info#:#Geben Sie bitte eine YouTube-URL ein.
+ytb#:#YouTube
+
+surl#:#Direkte URL zu Mediendatei im Web
+simple_url#:#Direkte URL zu Mediendatei im Web
+simple_url_info#:#Geben sie bitte eine URL zu einem Video an.
+
+imo#:#Video-Datei hochladen

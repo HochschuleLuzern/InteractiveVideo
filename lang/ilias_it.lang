@@ -220,3 +220,13 @@ best_solution_text#:#Soluzione migliore
 best_solution_text_info#:#Se viene offerto un campo di commento (vedi sotto), un utente non può visualizzare la soluzione finché non ha salvato una risposta.
 show_best_solution_info#:#Dopo aver risposto alla domanda, gli utenti possono visualizzare la soluzione corretta (tramite il pulsante "Mostra soluzione").
 at_least_one_answer#:#Seleziona una risposta
+
+ytb_youtube_url#:#URL YouTube
+ytb_youtube_info#:#Inserisci un URL di YouTube.
+ytb#:#YouTube
+
+surl#:#Url
+simple_url#:#URL semplice
+simple_url_info#:#Inserisci un URL a un video.
+
+imo#:#Carica file video

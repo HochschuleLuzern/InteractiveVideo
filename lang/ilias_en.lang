@@ -221,3 +221,13 @@ best_solution_text#:#Best solution
 best_solution_text_info#:#If a comment field is offered (see below), a user cannot view the solution until he/she has saved an answer.
 show_best_solution_info#:#After answering the question, users can display the correct solution (via button "Show solution").
 at_least_one_answer#:#Please select an answer
+
+ytb_youtube_url#:#YouTube URL
+ytb_youtube_info#:#Please insert a YouTube URL.
+ytb#:#YouTube
+
+surl#:#Url
+simple_url#:#Simple URL
+simple_url_info#:#Please insert an URL to a video.
+
+imo#:#Upload video file
