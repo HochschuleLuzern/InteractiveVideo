@@ -3332,9 +3332,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 
 		if ($ilAccess->checkAccess("read", "", $ref_id))
 		{
-			$ilCtrl->initBaseClass("ilObjPluginDispatchGUI");
 			$ilCtrl->setTargetScript("ilias.php");
-			$ilCtrl->getCallStructure(strtolower("ilObjPluginDispatchGUI"));
 			$ilCtrl->setParameterByClass($class_name, "ref_id", $ref_id);
 			$ilCtrl->saveParameterByClass($class_name, 'xvid_referrer_ref_id');
 			$ilCtrl->setParameterByClass($class_name, 'xvid_referrer', urlencode($_GET['xvid_referrer']));
@@ -3342,9 +3340,7 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 		}
 		else if($ilAccess->checkAccess("visible", "", $ref_id))
 		{
-			$ilCtrl->initBaseClass("ilObjPluginDispatchGUI");
 			$ilCtrl->setTargetScript("ilias.php");
-			$ilCtrl->getCallStructure(strtolower("ilObjPluginDispatchGUI"));
 			$ilCtrl->setParameterByClass($class_name, "ref_id", $ref_id);
 			$ilCtrl->saveParameterByClass($class_name, 'xvid_referrer_ref_id');
 			$ilCtrl->setParameterByClass($class_name, 'xvid_referrer', urlencode($_GET['xvid_referrer']));
