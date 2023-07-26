@@ -221,9 +221,9 @@ best_solution_text_info#:#Se viene offerto un campo di commento (vedi sotto), un
 show_best_solution_info#:#Dopo aver risposto alla domanda, gli utenti possono visualizzare la soluzione corretta (tramite il pulsante "Mostra soluzione").
 at_least_one_answer#:#Seleziona una risposta
 
-ytb_youtube_url#:#URL YouTube
-ytb_youtube_info#:#Inserisci un URL di YouTube.
-ytb#:#YouTube
+ytb_youtube_url#:#URL YouTube/Switchtube
+ytb_youtube_info#:#Inserisci un URL di YouTube/Switchtube.
+ytb#:#YouTube/Switchtube
 
 surl#:#Url
 simple_url#:#URL semplice

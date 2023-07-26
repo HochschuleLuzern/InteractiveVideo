@@ -264,6 +264,11 @@ activate_marker#:#Activate marker
 activate_marker_info#:#Activate marker
 no_comment_id_given#:#Something went wrong, the comment id is missing
 imo#:#Upload video file
+
+ytb_youtube_url#:#YouTube- or Switchtube-URL
+ytb_youtube_info#:#Please insert a YouTube- Switchtube-URL.
+ytb#:#YouTube or Switchtube
+
 surl#:#Url
 simple_url#:#Simple URL
 simple_url_info#:#Please insert an URL to a video.
