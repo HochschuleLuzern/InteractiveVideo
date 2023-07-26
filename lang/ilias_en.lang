@@ -222,9 +222,9 @@ best_solution_text_info#:#If a comment field is offered (see below), a user cann
 show_best_solution_info#:#After answering the question, users can display the correct solution (via button "Show solution").
 at_least_one_answer#:#Please select an answer
 
-ytb_youtube_url#:#YouTube URL
-ytb_youtube_info#:#Please insert a YouTube URL.
-ytb#:#YouTube
+ytb_youtube_url#:#YouTube- or Switchtube-URL
+ytb_youtube_info#:#Please insert a YouTube- Switchtube-URL.
+ytb#:#YouTube or Switchtube
 
 surl#:#Url
 simple_url#:#Simple URL

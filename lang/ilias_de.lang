@@ -221,9 +221,9 @@ best_solution_text_info#:#Wenn ein Kommentarfeld angeboten wird (siehe unten), k
 show_best_solution_info#:#Nachdem die Frage beantwortet wurde, können sich Nutzer die richtige Lösung anzeigen lassen (über Button «Lösung zeigen»).
 at_least_one_answer#:#Bitte wählen Sie eine Antwort aus
 
-ytb_youtube_url#:#YouTube-URL
-ytb_youtube_info#:#Geben Sie bitte eine YouTube-URL ein.
-ytb#:#YouTube
+ytb_youtube_url#:#YouTube- oder Switchtube-URL
+ytb_youtube_info#:#Geben Sie bitte eine YouTube- oder Switchtube-URL ein.
+ytb#:#YouTube oder Switchtube
 
 surl#:#Direkte URL zu Mediendatei im Web
 simple_url#:#Direkte URL zu Mediendatei im Web
