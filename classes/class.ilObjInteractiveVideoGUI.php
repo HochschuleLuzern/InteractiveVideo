@@ -1171,12 +1171,15 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 		/** $source ilInteractiveVideoSource */
 		foreach($sources as $key => $source)
 		{
-			/** @var ilInteractiveVideoSourceGUI $gui */
-			if($factory->isActive($source->getClass()))
-			{
-				$gui= $source->getGUIClass();
-				$gui->getEditFormCustomValues($a_values, $this->object);
-			}
+            // only fetch source relevant to object
+            if($source->getId() == $this->object->getSourceId()){
+			    /** @var ilInteractiveVideoSourceGUI $gui */
+			    if($factory->isActive($source->getClass()))
+			    {
+				    $gui= $source->getGUIClass();
+				    $gui->getEditFormCustomValues($a_values, $this->object);
+			    }
+            }
 		}
 		$a_values['is_anonymized']		= $this->object->isAnonymized();
 		$a_values['is_repeat'] 			= $this->object->isRepeat();
