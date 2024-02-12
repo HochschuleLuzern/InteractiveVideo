@@ -14,6 +14,7 @@ var player = null,
 
 
 function onYouTubeIframeAPIReady() {
+	window.addEventListener("load",function(event) {
 	$.each(il.InteractiveVideo, function (player_id, value) {
 		if (value.hasOwnProperty("player_type") && value.player_type === "ytb") {
 			var player = new YT.Player(player_id, {
@@ -81,6 +82,7 @@ function onYouTubeIframeAPIReady() {
 				enablePluginDebug: false
 			});
 		}
+	});
 	});
 }
 var done = false;
