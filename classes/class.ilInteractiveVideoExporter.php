@@ -76,7 +76,7 @@ class ilInteractiveVideoExporter extends ilXmlExporter
 				#'xsd_file'     => 'xtsf_5_1.xsd',
 				'uses_dataset' => false,
 				'min'          => '5.2.0',
-				'max'          => '5.2.999'
+				'max'          => ''
 			)
 		);
 	}
