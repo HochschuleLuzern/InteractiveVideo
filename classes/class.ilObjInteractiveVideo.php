@@ -259,7 +259,7 @@ class ilObjInteractiveVideo extends ilObjectPlugin implements ilLPStatusPluginIn
 		global $ilLog;
 		if(! $a_clone_mode)
 		{
-			$post_src_id = ilUtil::stripSlashes($_POST['source_id']);
+			$post_src_id = isset($_POST['source_id']) ? ilUtil::stripSlashes($_POST['source_id']) : '';
 			$from_post = false;
 			if(($post_src_id == null || $post_src_id == '') && $this->source_id != null)
 			{
