@@ -87,7 +87,12 @@ class ilInteractiveVideoMediaObject implements ilInteractiveVideoSource
 	 */
 	public function doUpdateVideoSource($obj_id)
 	{
-		$file = $_FILES['importfile'];
+        if(array_key_exists('importfile',$_FILES)){
+            $file = $_FILES['importfile'];
+        }
+        else{
+            $file = $_FILES['video_file'];
+        }
 		if($file['error'] == 0 && $this->import_file_name == '')
 		{
 			$this->uploadVideoFile($obj_id);

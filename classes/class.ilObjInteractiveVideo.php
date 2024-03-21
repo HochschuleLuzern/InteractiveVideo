@@ -350,7 +350,7 @@ class ilObjInteractiveVideo extends ilObjectPlugin implements ilLPStatusPluginIn
 					$ilLog->write($e->getMessage());
 					$ilLog->logStack();
 
-					$this->delete();
+					if(!empty($this->source_id)) $this->delete();
 
 					throw new ilException(sprintf("%s: Creation incomplete", __METHOD__));
 				}
