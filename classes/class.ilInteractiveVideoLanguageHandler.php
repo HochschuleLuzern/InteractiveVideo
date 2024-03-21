@@ -18,7 +18,7 @@ class ilInteractiveVideoLanguageHandler extends ilPluginLanguage
 
             foreach($languages as $lang)
             {
-                $txt = file($dir."/".$lang["file"]);
+                $txt = file($dir . $lang["file"]);
                 if (is_array($txt))
                 {
                     foreach ($txt as $row)
