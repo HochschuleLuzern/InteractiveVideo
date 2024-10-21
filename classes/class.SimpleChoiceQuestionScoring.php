@@ -90,7 +90,7 @@ class SimpleChoiceQuestionScoring
 			$results[$counter]['title']       = $row['comment_title'];
 			$results[$counter]['neutral_answer'] = $row['neutral_answer'];
             $results[$counter]['user_id'] = $row['user_id'];
-			if($answered[$row['question_id']] !== null)
+			if(array_key_exists($row['question_id'], $answered) && $answered[$row['question_id']] !== null)
 			{
 				$results[$counter]['answered'] = 1;
 				$answered_questions++;
