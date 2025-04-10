@@ -112,7 +112,7 @@ class ilInteractiveVideoDbUpdater extends ilPluginDBUpdate
      * @param int $a_version
      * @return void
      */
-    public function setCurrentVersion(int $a_version): void
+    public function setCurrentVersion(?int $a_version): void
 	{
 		$this->db->update('rep_robj_xvid_sources',
 			[
