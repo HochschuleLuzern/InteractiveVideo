@@ -279,6 +279,6 @@ xvid_visible#:#Interactive Video is visible
 xvid_write#:#User can edit Interactive Video
 xvid_xvid_view_lp#:#View Learning Progress
 you_need_a_short_title#:#You need to provide a short title!
-ytb#:#YouTube
-ytb_youtube_info#:#Please insert a YouTube URL.
-ytb_youtube_url#:#YouTube URL
+ytb#:#YouTube or Switchtube
+ytb_youtube_info#:#Please insert a YouTube- Switchtube-URL.
+ytb_youtube_url#:#YouTube- or Switchtube-URL

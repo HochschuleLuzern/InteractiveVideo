@@ -277,6 +277,6 @@ xvid_visible#:#Interaktives Video ist sichtbar
 xvid_write#:#Interaktives Video bearbeiten
 xvid_xvid_view_lp#:#Lernfortschritt einsehen
 you_need_a_short_title#:#Sie müssen einen Kurztitel eintragen!
-ytb#:#YouTube
-ytb_youtube_info#:#Geben Sie bitte eine YouTube-URL ein.
-ytb_youtube_url#:#YouTube-URL
+ytb#:#YouTube oder Switchtube
+ytb_youtube_info#:#Geben Sie bitte eine YouTube- oder Switchtube-URL ein.
+ytb_youtube_url#:#YouTube- oder Switchtube-URL
