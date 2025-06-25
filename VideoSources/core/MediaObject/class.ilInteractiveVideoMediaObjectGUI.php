@@ -16,12 +16,14 @@ class ilInteractiveVideoMediaObjectGUI implements ilInteractiveVideoSourceGUI
 	public function getForm($option, $obj_id)
 	{
 		$upload_field = new ilFileInputGUI(ilInteractiveVideoPlugin::getInstance()->txt('video_file'), 'video_file');
-		# BEGIN PATCH HSLU We use the Filetype-Options from the Mediacast
-		include_once('Modules/MediaCast/classes/class.ilMediaCastSettings.php');
-		$video_settings = ilMediaCastSettings::_getInstance();
-		$suffixes = $video_settings->getPurposeSuffixes();
-		$upload_field->setSuffixes(array_merge($suffixes['VideoPortable'],$suffixes['AudioPortable']));
-		# END PATCH HSLU
+        # BEGIN PATCH HSLU We use the Filetype-Options from the Mediacast
+        include_once('Modules/MediaCast/classes/class.ilMediaCastSettings.php');
+        $video_settings = ilMediaCastSettings::_getInstance();
+        $suffixes = $video_settings->getPurposeSuffixes();
+        if(isset($suffixes['VideoPortable'])) {
+            $upload_field->setSuffixes($suffixes['VideoPortable']);
+        }
+        # END PATCH HSLU
 		$option->addSubItem($upload_field);
 		return $option;
 	}
