@@ -383,10 +383,60 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
 		global $tpl, $ilTabs;
 		$ilTabs->activateTab('content');
 
+		if(!$this->hasValidVideoSource())
+		{
+			$this->handleMissingVideoSource();
+			return;
+		}
+
 		$video_tpl = $this->buildContentTemplate();
 
 		$tpl->setContent($video_tpl->get());
         $tpl->setPermanentLink(ilInteractiveVideoPlugin::PLUGIN_ID, $this->ref_id);
+	}
+
+	/**
+	 * Checks whether the object has a video source that actually exists and is active.
+	 * Mirrors the validity check in ilInteractiveVideoSourceFactoryGUI::__construct() so
+	 * that we never try to render a player for an object without a (usable) source.
+	 * @return bool
+	 */
+	protected function hasValidVideoSource(): bool
+	{
+		$source_id = $this->object->getSourceId();
+		if($source_id === '')
+		{
+			return false;
+		}
+
+		$factory = new ilInteractiveVideoSourceFactory();
+		$source  = $factory->getVideoSourceObject($source_id);
+		if($source === null)
+		{
+			return false;
+		}
+
+		return $factory->isActive($source->getClass()) !== false;
+	}
+
+	/**
+	 * Handles the display of an object whose video source is missing or invalid.
+	 * Users with write permission are sent to the settings so they can add a source;
+	 * everyone else just gets a message instead of a fatal error.
+	 */
+	protected function handleMissingVideoSource(): void
+	{
+		global $DIC;
+		$plugin = ilInteractiveVideoPlugin::getInstance();
+
+		if($DIC->access()->checkAccess('write', '', $this->object->getRefId()))
+		{
+			$DIC->ui()->mainTemplate()->setOnScreenMessage('failure', $plugin->txt('source_has_to_be'), true);
+			$this->ctrl->redirect($this, 'editProperties');
+			return;
+		}
+
+		$DIC->ui()->mainTemplate()->setOnScreenMessage('failure', $plugin->txt('source_has_to_be'));
 	}
 
     /**
@@ -398,6 +448,11 @@ class ilObjInteractiveVideoGUI extends ilObjectPluginGUI implements ilDesktopIte
      */
 	public function getContentAsString(bool $light_version = false): string
 	{
+		if(!$this->hasValidVideoSource())
+		{
+			return '';
+		}
+
 		$video_tpl = $this->buildContentTemplate($light_version);
 		return $video_tpl->get();
 	}
